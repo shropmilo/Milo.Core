@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Milo.Core.Services;
+using NLog;
 using NLog.Extensions.Logging;
 
 namespace Milo.Core;
@@ -9,6 +10,8 @@ namespace Milo.Core;
 /// </summary>
 public static class MiloCore 
 {
+    private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
+
     public static bool IsStarted { get; private set; }
 
     /// <summary>
@@ -36,7 +39,7 @@ public static class MiloCore
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="additional"></param>
-    public static void ConfigureCoreMiloServices(this MauiAppBuilder builder, IEnumerable<Assembly>? additional = null)
+    public static MauiAppBuilder ConfigureCoreMiloServices(this MauiAppBuilder builder, IEnumerable<Assembly>? additional = null)
     {
         // We use NLog so get things registered
         builder.Logging.AddNLog();
@@ -56,17 +59,16 @@ public static class MiloCore
         {
             foreach (var miloService in CreateInstances<IMiloService>(assembly))
             {
-                builder.Services.Add(new ServiceDescriptor(miloService.GetType(), miloService));
+                builder.Services.AddSingleton(miloService);
 
                 foreach (var @interface in miloService.GetType().GetInterfaces())
                 {
-                    builder.Services.Add(new ServiceDescriptor(@interface, miloService));
+                    builder.Services.AddSingleton(@interface, miloService);
                 }
             }
         }
 
-
-        Start();
+        return builder;
     }
 
     /// <summary>
@@ -98,7 +100,7 @@ public static class MiloCore
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.Error(e);
             }
         }
 
@@ -118,7 +120,14 @@ public static class MiloCore
             {
                 foreach (var service in services)
                 {
-                    service.Start();
+                    try
+                    {
+                        service.Start();
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e);
+                    }
                 }
             }
             
@@ -141,7 +150,14 @@ public static class MiloCore
             {
                 foreach (var service in services)
                 {
-                    service.Stop();
+                    try
+                    {
+                        service.Stop();
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e);
+                    }
                 }
             }
 
