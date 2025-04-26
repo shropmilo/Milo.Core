@@ -1,6 +1,6 @@
 ﻿using NLog;
 
-namespace Milo.Core;
+namespace Milo.Core.MAUI;
 
 /// <summary>
 /// Action to run at a deferred time - continued calls to Defer restarts the timer

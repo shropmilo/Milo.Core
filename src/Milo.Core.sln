@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Milo.Controls,MAUI", "..\..\Milo.Controls\src\Milo.Controls.MAUI\Milo.Controls,MAUI.csproj", "{B62D4E56-9D21-EB60-47B6-11395D82BBCB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Milo.Core.MAUI", "Milo.Core.MAUI\Milo.Core.MAUI.csproj", "{1BAB23F2-92CB-D34B-F1AA-8764BC40D2D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Milo.Controls.WPF", "..\..\Milo.Controls\src\Milo.Controls.WPF\Milo.Controls.WPF.csproj", "{1836E224-55D2-4859-A4EF-98EC9CBE33CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Milo.Core", "Milo.Core\Milo.Core.csproj", "{7A7CF376-7C26-49DA-8BCA-EB5E9B6EC661}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B62D4E56-9D21-EB60-47B6-11395D82BBCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B62D4E56-9D21-EB60-47B6-11395D82BBCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B62D4E56-9D21-EB60-47B6-11395D82BBCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B62D4E56-9D21-EB60-47B6-11395D82BBCB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1836E224-55D2-4859-A4EF-98EC9CBE33CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1836E224-55D2-4859-A4EF-98EC9CBE33CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1836E224-55D2-4859-A4EF-98EC9CBE33CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1836E224-55D2-4859-A4EF-98EC9CBE33CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BAB23F2-92CB-D34B-F1AA-8764BC40D2D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BAB23F2-92CB-D34B-F1AA-8764BC40D2D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BAB23F2-92CB-D34B-F1AA-8764BC40D2D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BAB23F2-92CB-D34B-F1AA-8764BC40D2D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A7CF376-7C26-49DA-8BCA-EB5E9B6EC661}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A7CF376-7C26-49DA-8BCA-EB5E9B6EC661}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A7CF376-7C26-49DA-8BCA-EB5E9B6EC661}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A7CF376-7C26-49DA-8BCA-EB5E9B6EC661}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

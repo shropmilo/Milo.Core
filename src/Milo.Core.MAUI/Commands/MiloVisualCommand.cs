@@ -1,12 +1,13 @@
-﻿using System.ComponentModel;
+﻿using Milo.Core.Commands;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Milo.Core.Commands
+namespace Milo.Core.MAUI.Commands
 {
     /// <summary>
     /// Command with a Header
     /// </summary>
-    public class VisualCommand : Command, INotifyPropertyChanged
+    public class VisualCommand : Command, IMiloVisualCommand
     {
         private object? _header;
 
@@ -26,7 +27,7 @@ namespace Milo.Core.Commands
             Header = header;
         }
 
-        public VisualCommand(Action<object> execute,  object header) : base(execute)
+        public VisualCommand(Action<object> execute, object header) : base(execute)
         {
             Header = header;
         }

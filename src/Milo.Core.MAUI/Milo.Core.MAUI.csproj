@@ -22,15 +22,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Include="..\README.md">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
+		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+		<PackageReference Include="NLog.Extensions.Logging" Version="5.4.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="NLog.Extensions.Logging" Version="5.4.0" />
+	  <ProjectReference Include="..\Milo.Core\Milo.Core.csproj" />
 	</ItemGroup>
 
 </Project>
