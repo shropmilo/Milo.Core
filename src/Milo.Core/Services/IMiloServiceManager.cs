@@ -3,14 +3,14 @@
 /// <summary>
 /// Core interface for service finding and instance creation
 /// </summary>
-public interface IMiloServiceManager
+public interface IMiloServiceManager : IMiloService
 {
     /// <summary>
     /// Creates a new instance of the requested object - Lifetime is managed by the caller.
     /// </summary>
     /// <typeparam name="TInstanceType"></typeparam>
     /// <returns></returns>
-    TInstanceType CreateInstance<TInstanceType>();
+    TInstanceType? CreateInstance<TInstanceType>();
 
     /// <summary>
     /// Gets a singleton registered service.
@@ -19,7 +19,7 @@ public interface IMiloServiceManager
     /// </summary>
     /// <typeparam name="TMiloService"></typeparam>
     /// <returns></returns>
-    TMiloService GetService<TMiloService>() where TMiloService : IMiloService;
+    TMiloService? GetService<TMiloService>() where TMiloService : IMiloService;
 
     /// <summary>
     /// Gets all singleton instances
@@ -28,11 +28,4 @@ public interface IMiloServiceManager
     /// <returns></returns>
     IEnumerable<TMiloService> GetServices<TMiloService>() where TMiloService : IMiloService;
 
-    /// <summary>
-    /// Register a new service
-    /// </summary>
-    /// <typeparam name="TMiloService"></typeparam>
-    /// <param name="instance"></param>
-    /// <returns></returns>
-    bool RegisterService<TMiloService>(TMiloService instance) where TMiloService : IMiloService;
 }

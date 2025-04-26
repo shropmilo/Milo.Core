@@ -1,5 +1,6 @@
 ﻿using Milo.Core.Services;
 using NLog;
+using System.Reflection;
 
 namespace Milo.Core;
 
@@ -100,5 +101,41 @@ public static class MiloCore
         }
 
         return IsStarted;
+    }
+
+    /// <summary>
+    /// Seeks implementations of an interface within an assembly - these are created and returned.
+    /// </summary>
+    /// <typeparam name="TInterface"></typeparam>
+    /// <param name="assembly"></param>
+    /// <returns></returns>
+    public static IEnumerable<TInterface> CreateInstances<TInterface>(Assembly assembly) where TInterface : class
+    {
+        var interfaceType = typeof(TInterface);
+        var classes = assembly.GetTypes()
+            .Where(type => interfaceType.IsAssignableFrom(type) && type.IsClass)
+            .ToList();
+
+        var list = new List<TInterface>();
+
+        foreach (var cls in classes)
+        {
+            if (cls.IsAbstract)
+                continue;
+
+            try
+            {
+                if (Activator.CreateInstance(cls) is TInterface item)
+                {
+                    list.Add(item);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
+        }
+
+        return list;
     }
 }

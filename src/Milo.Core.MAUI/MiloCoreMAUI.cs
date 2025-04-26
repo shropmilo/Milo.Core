@@ -24,10 +24,29 @@ namespace Milo.Core.MAUI
             builder.Logging.AddNLog();
 
             // Automatically reflect over assemblies to find MiloServices
-            var assemblies = new List<Assembly>
+            var ourAssemblies = new List<Assembly>
             {
-                Assembly.GetExecutingAssembly()
+                Assembly.GetExecutingAssembly(),
+                Assembly.GetCallingAssembly()
             };
+
+            var assemblies = new List<Assembly>(ourAssemblies);
+            foreach (var ourAssembly in ourAssemblies)
+            {
+                foreach (var referencedAssembly in ourAssembly.GetReferencedAssemblies())
+                {
+                    try
+                    {
+                        var ass = Assembly.Load(referencedAssembly);
+                        if(!assemblies.Contains(ass))
+                            assemblies.Add(ass);
+                    }
+                    catch (Exception e)
+                    {
+                       Logger.Error(e);
+                    }
+                }
+            }
 
             if (additional != null)
             {
@@ -36,7 +55,7 @@ namespace Milo.Core.MAUI
 
             foreach (var assembly in assemblies)
             {
-                foreach (var miloService in CreateInstances<IMiloService>(assembly))
+                foreach (var miloService in MiloCore.CreateInstances<IMiloService>(assembly))
                 {
                     builder.Services.AddSingleton(miloService);
 
@@ -50,42 +69,5 @@ namespace Milo.Core.MAUI
             return builder;
         }
 
-        /// <summary>
-        /// Seeks implementations of an interface within an assembly - these are created and returned.
-        /// </summary>
-        /// <typeparam name="TInterface"></typeparam>
-        /// <param name="assembly"></param>
-        /// <returns></returns>
-        public static IEnumerable<TInterface> CreateInstances<TInterface>(Assembly assembly) where TInterface : class
-        {
-            var interfaceType = typeof(TInterface);
-            var classes = assembly.GetTypes()
-                .Where(type => interfaceType.IsAssignableFrom(type) && type.IsClass)
-                .ToList();
-
-            var list = new List<TInterface>();
-
-            foreach (var cls in classes)
-            {
-                if (cls.IsAbstract)
-                    continue;
-
-                try
-                {
-                    if (Activator.CreateInstance(cls) is TInterface item)
-                    {
-                        list.Add(item);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e);
-                }
-            }
-
-            return list;
-        }
     }
-
-
 }

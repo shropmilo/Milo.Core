@@ -17,8 +17,6 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>Core classes and interfaces</Title>
 		<IncludeSymbols>True</IncludeSymbols>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-
 	</PropertyGroup>
 
 	<ItemGroup>
