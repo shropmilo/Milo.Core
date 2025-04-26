@@ -30,11 +30,11 @@
 	  <ProjectReference Include="..\Milo.Core\Milo.Core.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <None Update="README.md">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
-	</ItemGroup>
+  <ItemGroup>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
