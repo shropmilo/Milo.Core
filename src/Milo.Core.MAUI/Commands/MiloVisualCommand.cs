@@ -32,6 +32,11 @@ namespace Milo.Core.MAUI.Commands
             Header = header;
         }
 
+        public virtual bool IsAvailable(object parameter)
+        {
+            return true;
+        }
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler? PropertyChanged;
 
