@@ -1,4 +1,5 @@
-﻿using Milo.Core.Services;
+﻿using System.Diagnostics;
+using Milo.Core.Services;
 using NLog;
 using System.Reflection;
 
@@ -19,54 +20,29 @@ public static class MiloCore
     public static IMiloServiceManager? Services { get; private set; }
 
     /// <summary>
-    /// Locate a required service from the main application service system
-    /// </summary>
-    /// <typeparam name="TMiloService"></typeparam>
-    /// <returns></returns>
-    public static TMiloService? GetService<TMiloService>() where TMiloService : IMiloService
-    {
-        if (Services == null)
-            return default;
-
-        return Services.GetService<TMiloService>();
-    }
-
-    /// <summary>
-    /// Get all services
-    /// </summary>
-    /// <typeparam name="TMiloService"></typeparam>
-    /// <returns></returns>
-    public static IEnumerable<TMiloService>? GetServices<TMiloService>() where TMiloService : IMiloService
-    {
-        return Services?.GetServices<TMiloService>();
-    }
-
-    /// <summary>
     /// Start all services
     /// </summary>
     /// <returns></returns>
-    public static bool Start(IMiloServiceManager? serviceManager)
+    public static bool Start(IMiloServiceManager serviceManager)
     {
+        Debug.Assert(serviceManager != null);
+
         if (!IsStarted)
         {
             Services = serviceManager;
-
-            var services = GetServices<IMiloService>();
-            if (services != null)
+            var services = Services.GetServices<IMiloService>();
+            foreach (var service in services)
             {
-                foreach (var service in services)
+                try
                 {
-                    try
-                    {
-                        service.Start();
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Error(e);
-                    }
+                    service.Start();
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e);
                 }
             }
-            
+
             IsStarted = true;
         }
 
@@ -79,21 +55,18 @@ public static class MiloCore
     /// <returns></returns>
     public static bool Shutdown()
     {
-        if (IsStarted)
+        if (IsStarted && Services != null)
         {
-            var services = GetServices<IMiloService>();
-            if (services != null)
+            var services = Services.GetServices<IMiloService>();
+            foreach (var service in services)
             {
-                foreach (var service in services)
+                try
                 {
-                    try
-                    {
-                        service.Stop();
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Error(e);
-                    }
+                    service.Stop();
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e);
                 }
             }
 
@@ -109,30 +82,27 @@ public static class MiloCore
     /// <typeparam name="TInterface"></typeparam>
     /// <param name="assembly"></param>
     /// <returns></returns>
-    public static IEnumerable<TInterface> CreateInstances<TInterface>(Assembly assembly) where TInterface : class
+    public static IEnumerable<TInterface> GetAssemblyInstances<TInterface>(Assembly assembly) where TInterface : class
     {
         var interfaceType = typeof(TInterface);
-        var classes = assembly.GetTypes()
-            .Where(type => interfaceType.IsAssignableFrom(type) && type.IsClass)
-            .ToList();
-
+        var classes = assembly.GetTypes().Where(t => t is { IsClass: true, IsAbstract: false });
         var list = new List<TInterface>();
 
         foreach (var cls in classes)
         {
-            if (cls.IsAbstract)
-                continue;
-
-            try
+            if (interfaceType.IsAssignableFrom(cls))
             {
-                if (Activator.CreateInstance(cls) is TInterface item)
+                try
                 {
-                    list.Add(item);
+                    if (Activator.CreateInstance(cls) is TInterface item)
+                    {
+                        list.Add(item);
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
+                catch (Exception e)
+                {
+                    Logger.Error(e);
+                }
             }
         }
 
