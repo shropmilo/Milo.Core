@@ -10,7 +10,21 @@ public interface IMiloServiceManager : IMiloService
     /// </summary>
     /// <typeparam name="TInstanceType"></typeparam>
     /// <returns></returns>
-    TInstanceType? CreateInstance<TInstanceType>();
+    TInstanceType? CreateInstance<TInstanceType>() where TInstanceType : class;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    object CreateInstance(Type type);
+
+    /// <summary>
+    /// Returns a new instance of any object matching
+    /// </summary>
+    /// <typeparam name="TInstanceType"></typeparam>
+    /// <returns></returns>
+    IEnumerable<TInstanceType> CreateInstances<TInstanceType>() where TInstanceType : class;
 
     /// <summary>
     /// Gets a singleton registered service.

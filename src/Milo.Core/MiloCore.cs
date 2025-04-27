@@ -17,7 +17,7 @@ public static class MiloCore
     /// <summary>
     /// Access to services and instance creation.
     /// </summary>
-    public static IMiloServiceManager? Services { get; private set; }
+    public static IMiloServiceManager Services { get; private set; }
 
     /// <summary>
     /// Start all services
@@ -30,8 +30,8 @@ public static class MiloCore
         if (!IsStarted)
         {
             Services = serviceManager;
-            var services = Services.GetServices<IMiloService>();
-            foreach (var service in services)
+
+            foreach (var service in Services.GetServices<IMiloService>())
             {
                 try
                 {
@@ -55,7 +55,7 @@ public static class MiloCore
     /// <returns></returns>
     public static bool Shutdown()
     {
-        if (IsStarted && Services != null)
+        if (IsStarted)
         {
             var services = Services.GetServices<IMiloService>();
             foreach (var service in services)
@@ -76,25 +76,18 @@ public static class MiloCore
         return IsStarted;
     }
 
-    /// <summary>
-    /// Seeks implementations of an interface within an assembly - these are created and returned.
-    /// </summary>
-    /// <typeparam name="TInterface"></typeparam>
-    /// <param name="assembly"></param>
-    /// <returns></returns>
-    public static IEnumerable<TInterface> GetAssemblyInstances<TInterface>(Assembly assembly) where TInterface : class
+    public static IEnumerable<object> GetAssemblyInstances(Type type, Assembly assembly)
     {
-        var interfaceType = typeof(TInterface);
         var classes = assembly.GetTypes().Where(t => t is { IsClass: true, IsAbstract: false });
-        var list = new List<TInterface>();
+        var list = new List<object>();
 
         foreach (var cls in classes)
         {
-            if (interfaceType.IsAssignableFrom(cls))
+            if (type.IsAssignableFrom(cls))
             {
                 try
                 {
-                    if (Activator.CreateInstance(cls) is TInterface item)
+                    if (Activator.CreateInstance(cls) is { } item)
                     {
                         list.Add(item);
                     }
@@ -107,5 +100,15 @@ public static class MiloCore
         }
 
         return list;
+    }
+    /// <summary>
+    /// Seeks implementations of an interface within an assembly - these are created and returned.
+    /// </summary>
+    /// <typeparam name="TInterface"></typeparam>
+    /// <param name="assembly"></param>
+    /// <returns></returns>
+    public static IEnumerable<TInterface> GetAssemblyInstances<TInterface>(Assembly assembly) where TInterface : class
+    {
+        return (IEnumerable<TInterface>)GetAssemblyInstances(typeof(TInterface), assembly);
     }
 }
