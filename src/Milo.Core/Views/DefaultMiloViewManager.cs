@@ -44,7 +44,7 @@ public class DefaultMiloViewManager : IMiloViewManager
 
     public void Start()
     {
-        Factories = (List<IMiloViewFactory>) [..MiloCore.Services.CreateInstances<IMiloViewFactory>()];
+        Factories = new List<IMiloViewFactory>(MiloCore.Services.CreateInstances<IMiloViewFactory>());
     }
 
     public void Stop()

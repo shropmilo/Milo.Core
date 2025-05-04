@@ -109,6 +109,12 @@ public static class MiloCore
     /// <returns></returns>
     public static IEnumerable<TInterface> GetAssemblyInstances<TInterface>(Assembly assembly) where TInterface : class
     {
-        return (IEnumerable<TInterface>)GetAssemblyInstances(typeof(TInterface), assembly);
+        foreach (var obj in GetAssemblyInstances(typeof(TInterface), assembly))
+        {
+            if (obj is TInterface requested)
+            {
+                yield return requested;
+            }
+        }
     }
 }
